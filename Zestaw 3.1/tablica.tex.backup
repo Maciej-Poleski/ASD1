@@ -1,0 +1,77 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4paper,12pt]{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{polski}
+
+\title{Zadania domowe. Zestaw 2.2}
+\author{Maciej Poleski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{listings}
+
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Zadania domowe. Zestaw 2.2)
+  /Author   (Maciej Poleski)
+  /Creator  (Maciej Poleski)
+  /Producer (Maciej Poleski)
+  /Subject  (ASD1)
+  /Keywords (ASD1)
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\section{}
+
+\section{}
+Posortować według niemalejących czasów obsługi i obsługiwać po kolei. Weźmy dowolne rozwiązanie optymalne (kolejność obsługi klientów). Zmodyfikujmy to rozwiązanie przenosząc najbardziej czasochłonnego klienta na koniec kolejki. Koszt obsługi ostatniego klienta nie zależy od kolejności obsługi - liczy się tylko czas zakończenia, który bez względu na kolejność jest taki sam (dodawanie jest przemienne). Mamy taką sytuacje (w rozwiązaniu optymalnym):
+\begin{verbatim}
+------X-------Y
+\end{verbatim}
+\verb|Y| jest ostatni, \verb|X| jest najbardziej kosztowny. Jeżeli zamienimy ich miejscami, to wszystkie koszta przed \verb|X| pozostaną takie same, koszt ostatniego klienta pozostanie taki sam, a koszta klientów od \verb|X| do \verb|Y| nie wzrosną ponieważ \verb|Y|$\leq$\verb|X|.
+\begin{alltt}
+ A[0..n-1] <- tablica z kosztami obsługi wszystkich klientów
+ sort(A)
+ result <- 0
+ prefix <- 0
+ for i <- to n):
+    prefix <- prefix + A[i]
+    result <- result + prefix
+
+\end{alltt}
+Odpowiedź jest w zmiennej \verb|result|.
+\section{}
+Zauważmy że trzecie ograniczenie jest nadmiarowe. Wszystkie elementy zbioru pustego zostały wybrane (zawsze). Więc trzecie ograniczenie jest szczególnym przypadkiem pierwszego. Pozostałe ograniczenia możemy utożsamiać z formułami logicznymi postaci $$x_i \wedge x_{i+1} \wedge \ldots \wedge x_{i+k} \rightarrow x_l$$. Wtedy warunek drugi będzie realizowany formułą dla której $x_l = \bot$ i będziemy szukać odpowiedzi na pytanie czy istnieje takie wartościowanie zmiennych $x_1 \ldots x_n$ dla którego każda formuła ma wartość 1.
+
+Oto jak tego dokonamy: Będziemy przechowywać kolekcje wszystkich ograniczeń oraz informację pozwalającą dla zadanej zmiennej natychmiast (w czasie stałym) uzyskać formuły w których występuje. Gdy określimy że wartość pewnej zmiennej wynosi 1 - usuniemy ją ze wszystkich ograniczeń w których występuje jako poprzednik implikacji (jako element neutralny logicznej koniunkcji). Gdy zachodzi (pusto) spełnienie poprzednika implikacji wiemy że następnik musi mieć wartość 1. Jeżeli jego wartość jeszcze nie jest znana - właśnie ją poznaliśmy. Jeżeli wynosi 0 - mamy sprzeczność (rozwiązanie nie istnieje, ponieważ wszystkie zmienne których wartość określiliśmy do tej pory są określone jednoznacznie). Wykonujemy tą operację do oporu. Jeżeli udało się - wartość wszystkich do tej pory nie ustalonych zmiennych możemy uznać za 0 - dzięki temu wszystkie implikacje będą spełnione. (z fałszu wynika wszystko...).
+\begin{alltt}
+ queue <- kolejka zmiennych których wartość określiliśmy na 1
+ --przeglądnij wszystkie ograniczenia i umieść w kolejce
+ implikacje których poprzednik jest (pusto) spełniony--
+ while queue is not empty:
+    x <- queue.dequeue()
+    usuń wszystkie wystąpienia x ze zbioru ograniczeń
+    dodaj do kolejki wszystkie zmienne które w efekcie stały
+       się następnikiem implikacji z pustym poprzednikiem
+    if istnieje ograniczenie którego poprzednik jest spełniony
+       a następnik fałszywy:
+       ROZWIĄZANIE NIE ISTNIEJE
+ ROZWIĄZANIE ISTNIEJE
+\end{alltt}
+A teraz jak zaimplementować wnętrze pętli, aby uzyskać oczekiwaną złożoność. Ograniczenia możemy identyfikować za pomocą identyfikatora (liczby porządkowej). Wystarczy, że dla każdego ograniczenia będziemy pamiętać ile ma poprzedników i jaki jest jego następnik (i czy jest on $\bot$). Oprócz tego dla każdej zmiennej (identyfikowanej np liczbą porządkową) zapamiętujemy w których ograniczeniach ona występuje (jako poprzednik implikacji). Dzięki temu usuwamy $x$ w czasie proporcjonalnym do ilości jego wystąpień w ograniczeniach (zmniejszając zapamiętaną liczbą poprzedników o 1). Jeżeli jakieś ograniczenie w efekcie osiągnęło 0 poprzedników sprawdzamy jaki ma następnik i dodajemy go do kolejki (jeżeli jest on fałszywy - ROZWIĄZANIE NIE ISTNIEJE). Taki preprocesing trwa proporcjonalnie do długości formuł niemal bez względu na to jak są one wyrażone na wejściu, a po jego wykonaniu już nie korzystamy z danych wejściowych. W efekcie cały algorytm działa w czasie proporcjonalnym do długości formuł.
+\section{}
+Zasadniczo jest to niemalże problem optymalnego nawiasowania. Dla każdego infiksu wyznaczymy jakie wartości może on przyjąć po nawiasowaniu (na pewno będzie co najmniej jedna wartość - jakiś wynik musi powstać). 
+\begin{alltt}
+ T[0..n-1][0..n-1] <- T[i][j] jest zbiorem możliwych do osiągnięcia
+                                wyników infiksu x_i ... x_j
+\end{alltt}
+
+
+\end{document}

@@ -1,0 +1,63 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4paper,12pt]{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{polski}
+
+\title{Zadania domowe. Zestaw 2.1}
+\author{Maciej Poleski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{listings}
+
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Zadania domowe. Zestaw 2.1)
+  /Author   (Maciej Poleski)
+  /Creator  (Maciej Poleski)
+  /Producer (Maciej Poleski)
+  /Subject  (ASD1)
+  /Keywords (ASD1)
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\section{}
+Wystarczy posortować. Załóżmy że \verb|A[1..n]| i \verb|B[1..n]| są posortowane nie rosnąco. Istnieje optymalne rozwiązanie takie że A[i] jest w tym samym filmie co B[i]. Weźmy 4 indeksy $0<a<b\leq{n}$ i $0<c<d\leq{n}$. Jeżeli $a$ nie było by w tym samym filmie co $c$, to istnieje $b$ i $d$ takie że $a$ jest z $d$ i $b$ jest z $c$ (ponieważ wszystkie mniejsze indeksy są już zajęte). Skoro tablice są posortowane, to \verb|A[a]|$=$\verb|A[b]|$+x$ gdzie $x\geq{0}$ oraz \verb|B[c]|$=$\verb|B[d]|$+y$ gdzie $y\geq{0}$. Ale ponieważ $$(A[b]+x)(B[d]+y)+ A[b]B[d] = 2A[b]B[d]+A[b]y+B[d]x+xy\geq$$
+$$\geq 2A[b]B[d]+A[b]y+B[d]x = A[b](B[d]+y)+B[d](A[b]+x)$$
+więc nasze sparowanie jest nie gorsze od dowolnego innego.
+
+Złożoność obliczeniowa to koszt sortowania, czyli $O(n\log(n))$.
+Pseudokodu nie będzie. Całe zadanie polega na przesortowaniu tablicy wskaźników do kolejnych elementów tablicy wejściowej. Wystarczająco efektywne algorytmy zostały omówione na MP.
+\section{}
+Istnieje rozwiązanie optymalne, w którym każdy punkt jest możliwie blisko 0. Weźmy optymalne rozwiązanie o minimalnej odległości $x$. Zaczynając od lewej strony (od 0) przesuwamy każdy punkt maksymalnie na lewo (tak aby nie zmniejszyć minimalnej odległości z jego lewej strony). W efekcie na pewno nie zmniejszymy minimalnej odległości z jego prawej strony. Wynika z tego, że skrajnie lewy punkt zawsze należy do jakiegoś rozwiązania optymalnego. Możemy poszukać minimalnej odległości binarnie.
+\begin{alltt}
+ A[0..n-1] <- tablica ze współrzędnymi punktów na osi liczbowej
+ sort(A)
+ l <- 0
+ r <- max(A) - min(A) + 1
+ while l < r:
+    s <- (l+r)/2
+    v <- 0
+    a <- \(-\infty\)
+    for i <- 0 to n):
+        if a + s <= A[i]:
+            v <- v + 1
+            a <- A[i]
+    if v < k:
+        r <- s
+    else
+        l <- s+1
+ return r-1;
+\end{alltt}
+Na uwagę zasługuje funkcja \verb|sort|. Aby uzyskać złożoność wymaganą w treści zadania można użyć algorytmu quicksort jako pivot wybierając punkt na środku przedziału (niekoniecznie istniejący!)
+\section{}
+Oczywiście zawsze opłaca się wybrać najbardziej wartościowe zadanie. Jeżeli zrezygnujemy z wykonania najbardziej wartościowego zadania to zwolni nam się jeden dzień który możemy wykorzystać na wykonanie innego zadania, ale to inne zadanie na pewno nie przyniesie nam większych zysków niż zadanie najbardziej wartościowe.
+
+\end{document}

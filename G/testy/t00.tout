@@ -1,0 +1,4 @@
+5 5 5 5 5
+4 4 4 4 4 2 1
+for(std::vector<uint32_t>::iterator i = G[mode == 0][T.top()].begin(), e = G[mode == 0][T.top()].end(); i != e; ++i)
+for(auto i : G[mode == 0][T.top()])

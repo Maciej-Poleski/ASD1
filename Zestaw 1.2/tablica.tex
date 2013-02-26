@@ -1,0 +1,62 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4paper,12pt]{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{polski}
+
+\title{Zadania domowe. Zestaw 1.2}
+\author{Maciej Poleski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{listings}
+
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Zadania domowe. Zestaw 1.2)
+  /Author   (Maciej Poleski)
+  /Creator  (Maciej Poleski)
+  /Producer (Maciej Poleski)
+  /Subject  (MP)
+  /Keywords (MP)
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\section{}
+
+\section{}
+\begin{alltt}
+ T[1..n] <- wartości sztabek. T[1] to wartość sztabki na samym dnie stosu
+ F[0] <- 0
+ S[0..M] <- 0
+ for i <- 1 to min(M,n)]:
+    F[i] <- F[i-1]+T[i]
+ for i <- M+1 to n]:
+    F[i] <- T[i] + S[i-1]
+    S[i] <- F[i-1]
+    for j <- 2 to M]:
+        if S[i-j] + T[i] + T[i-1] + ... + T[i-j+1] > F[i]:
+            F[i] <- S[i-j] + T[i] + T[i-1] + ... + T[i-j+1]
+            S[i] <- F[i-j]
+\end{alltt}
+ W tablicy \verb|F[0..n]| znajduje się odpowiedź na pytanie jaka jest łączna wartość sztabek zabranych ze stosu 0..n (ostatnie n sztabek) przez pierwszego gracza, jeżeli obaj grają optymalnie. W \verb|S[0..n]| jest odpowiedź dla drugiego gracza. Algorytm określa optymalny wynik dla danego stosu korzystając z informacji o optymalnych wynikach dla mniejszych stosów (po prostu wybiera najlepsze zagranie z pośród wszystkich legalnych). Ponieważ $M$ jest stałą, złożoność całego algorytmu jest liniowa względem n. Odpowiedź jest zapisana w \verb|F[n]|.
+\section{}
+Optymalna ścieżka do pozycji (i,j) może powstać na dokładnie jeden z dokładnie dwóch sposobów: przechodzimy na tę pozycję z pozycji (i-1,j) albo (i,j-1). Znając więc optymalne rozwiązanie dla pola powyżej i z lewej możemy z łatwością wskazać optymalne rozwiązanie dla danego pola.
+\begin{alltt}
+T[n][n] <- plansza zgodnie z opisem w zadaniu
+\(\forall{i<0} \forall{j<0}\) T[i][j] <- 0
+for i <- 0 to n):
+    for j <- 0 to n):
+        T[i][j] <- T[i][j] + max{T[i-1][j],T[i][j-1]}
+
+\end{alltt}
+Odpowiedź jest zapisana w \verb|T[n-1][n-1]|. Złożoność jest raczej oczywista.
+
+
+\end{document}
